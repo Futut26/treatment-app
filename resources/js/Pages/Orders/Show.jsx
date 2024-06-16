@@ -47,12 +47,16 @@ const Show = ({ order, auth, title, treatment }) => {
             weekday: "long",
         });
 
-        const availableSchedules = treatment.jadwal.filter(
-            (jadwal) =>
+        const availableSchedules = treatment.jadwal.filter((jadwal) => {
+            const startTime = jadwal.jam_mulai.slice(0, 5);
+            const endTime = jadwal.jam_selesai.slice(0, 5);
+
+            return (
                 selectedDay === jadwal.hari &&
-                time >= jadwal.jam_mulai.slice(0, 5) &&
-                time <= jadwal.jam_selesai.slice(0, 5)
-        );
+                time >= startTime &&
+                time <= endTime
+            );
+        });
 
         if (availableSchedules.length > 0) {
             setAvailableDoctors(availableSchedules.map((jadwal) => jadwal));
@@ -297,7 +301,7 @@ const Show = ({ order, auth, title, treatment }) => {
                             <button
                                 disabled={
                                     !isInputComplete ||
-                                    availableDoctors.length === 0 
+                                    availableDoctors.length === 0
 
                                 }
                                 onClick={() =>
